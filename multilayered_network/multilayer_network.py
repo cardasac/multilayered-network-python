@@ -52,10 +52,7 @@ class MultilayerNetwork:
 
         # Neuron layer 2 is the hidden layer, neuron layer 3 is the output layer.
         sigmoid_neuron_2 = cf.sigmoid(self.weights_in_hid.dot(inputs.T) + self.bias_hid)
-        sigmoid_neuron_3 = cf.sigmoid(self.weights_hid_out.dot(sigmoid_neuron_2) + self.bias_out)
-
-        # Return output layer sigmoid neuron.
-        return sigmoid_neuron_3
+        return cf.sigmoid(self.weights_hid_out.dot(sigmoid_neuron_2) + self.bias_out)
 
     def predict(self, unknown):
         """Method used for predicting the output given a new input.
@@ -68,7 +65,7 @@ class MultilayerNetwork:
         """
 
         unknown = self.feed_forward(unknown)
-        data = list()
+        data = []
 
         for x in unknown:
             if x > 0.7:
@@ -175,7 +172,6 @@ def menu():
 
     ans = int(input("Select a problem: "))
     if ans == 1:
-
         # ////////// Problem 1 \\\\\\\\\\
 
         train_inputs = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
@@ -183,8 +179,7 @@ def menu():
 
         problem_1 = MultilayerNetwork(3, 4, 1)
 
-        eps = 2000
-        problem_1.train(eps, 2.8, train_inputs, train_outputs)
+        problem_1.train(2000, 2.8, train_inputs, train_outputs)
 
         unknown = np.array([[0, 1, 1]])
         print(
@@ -197,7 +192,6 @@ def menu():
         menu()
 
     elif ans == 2:
-
         # ////////// Problem 2 \\\\\\\\\\
 
         train_inputs = np.array(
@@ -206,8 +200,7 @@ def menu():
 
         problem_2 = MultilayerNetwork(3, 3, 2)
 
-        eps = 2000
-        problem_2.train(eps, 5.0, train_inputs, train_outputs)
+        problem_2.train(2000, 5.0, train_inputs, train_outputs)
 
         unknown = np.array([[0, -1, -1]])
         print(
@@ -217,7 +210,6 @@ def menu():
         menu()
 
     elif ans == 3:
-
         # ////////// Problem 3 \\\\\\\\\\
 
         train_inputs = np.array(
@@ -229,8 +221,7 @@ def menu():
 
         problem_3 = MultilayerNetwork(4, 4, 3)
 
-        eps = 1000
-        problem_3.train(eps, 2.0, train_inputs, train_outputs)
+        problem_3.train(1000, 2.0, train_inputs, train_outputs)
 
         unknown = np.array([[1, 2, 2, 2]])
         result = problem_3.predict(unknown)
@@ -293,21 +284,12 @@ def menu():
         menu()
 
     elif ans == 4:
-
         # ////////// Problem 4 \\\\\\\\\\
 
         iris = load_iris()
-        features = iris.data.T
-
         train_inputs = iris.data
         train_outputs = iris.target
-        new_output = []
-
-        sepal_length = features[0]
-        sepal_width = features[1]
-        petal_length = features[2]
-        petal_width = features[3]
-
+        features = iris.data.T
         sepal_length_label = iris.feature_names[0]
         sepal_width_label = iris.feature_names[1]
         petal_length_label = iris.feature_names[2]
@@ -316,6 +298,8 @@ def menu():
         # This formatter will label the color bar with the correct target names.
         formatter = plt.FuncFormatter(lambda f, *args: iris.target_names[int(f)])
 
+        sepal_length = features[0]
+        sepal_width = features[1]
         # ===== SEPAL SCATTER GRAPH =====
         plt.scatter(sepal_length, sepal_width, c=iris.target)
         plt.colorbar(ticks=[0, 1, 2], format=formatter)
@@ -325,6 +309,8 @@ def menu():
 
         plt.show()
 
+        petal_length = features[2]
+        petal_width = features[3]
         # ===== PETAL SCATTER GRAPH =====
         plt.scatter(petal_length, petal_width, c=iris.target)
         plt.colorbar(ticks=[0, 1, 2], format=formatter)
@@ -334,6 +320,7 @@ def menu():
 
         plt.show()
 
+        new_output = []
         for i in train_outputs:
             if i == 0:
                 new_output.append([1, 0, 0])
@@ -346,8 +333,7 @@ def menu():
 
         problem_4 = MultilayerNetwork(4, 4, 3)
 
-        eps = 2000
-        problem_4.train(eps, 0.9, train_inputs, train_outputs)
+        problem_4.train(2000, 0.9, train_inputs, train_outputs)
 
         # Setosa
         unknown = np.array([[5.1, 3.5, 1.4, 0.2]])
